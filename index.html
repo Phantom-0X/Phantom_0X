@@ -1,486 +1,543 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Valentine</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Valentine</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
-    <style>
-        /* --- RESET & BASICS --- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    <style>
+        /* --- RESET & BASICS --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-        body {
-            /* UPDATED: Background Image with Dark Overlay */
-            background: linear-gradient(rgba(46, 0, 0, 0.6), rgba(0, 0, 0, 0.9)), url('img-bg.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            background-repeat: no-repeat;
-            
-            color: white;
-            font-family: 'Montserrat', sans-serif;
-            overflow-x: hidden;
-            min-height: 100vh;
-        }
+        body {
+            /* UPDATED: Background Image with Dark Overlay */
+            background: linear-gradient(rgba(46, 0, 0, 0.6), rgba(0, 0, 0, 0.9)), url('img-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
 
-        /* --- SAKURA BACKGROUND --- */
-        #sakura-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-            overflow: hidden;
-        }
+        /* --- SAKURA BACKGROUND --- */
+        #sakura-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
 
-        .petal {
+        .petal {
+            position: absolute;
+            background: rgba(255, 183, 197, 0.6);
+            border-radius: 150% 0 150% 0;
+            width: 15px;
+            height: 15px;
+        }
+
+        /* --- NEW: TOP CORNER TEXT --- */
+        .top-corners-container {
             position: absolute;
-            background: rgba(255, 183, 197, 0.6);
-            border-radius: 150% 0 150% 0;
-            width: 15px;
-            height: 15px;
-        }
-
-        /* --- HERO SECTION --- */
-        .hero {
-            position: relative;
-            height: 100vh;
+            top: 25px;
             width: 100%;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            z-index: 10;
-            overflow: hidden; 
+            justify-content: space-between;
+            padding: 0 40px;
+            z-index: 50; /* High z-index to sit on top */
+            pointer-events: none; /* Allows clicks to pass through */
         }
 
-        /* Floating Background Images in Hero */
-        .floating-gallery {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1; 
-            overflow: hidden;
-        }
-
-        .float-img {
-            position: absolute;
-            width: 200px;
-            height: 250px;
-            object-fit: cover;
-            border-radius: 10px;
-            opacity: 0; /* Hidden initially */
-            
-            /* UPDATED: Glowing Edge Effect */
-            border: 2px solid rgba(255, 255, 255, 0.5);
-            /* Layered shadows for a neon glow */
-            box-shadow: 0 0 10px rgba(255, 0, 64, 0.5),
-                        0 0 20px rgba(255, 0, 64, 0.3),
-                        0 0 30px rgba(255, 0, 64, 0.2);
-            transition: all 0.3s ease;
-        }
-        
-        /* Optional: Make glow slightly stronger on hover */
-        .float-img:hover {
-             box-shadow: 0 0 15px rgba(255, 0, 64, 0.7),
-                         0 0 30px rgba(255, 0, 64, 0.5),
-                         0 0 45px rgba(255, 0, 64, 0.3);
-             border-color: rgba(255, 255, 255, 0.8);
-        }
-
-
-        /* Standard Positions (Desktop) */
-        .pos-1 { top: 10%; left: 10%; transform: rotate(-5deg); }
-        .pos-2 { top: 15%; right: 15%; transform: rotate(10deg); }
-        .pos-3 { bottom: 20%; left: 15%; transform: rotate(5deg); }
-        .pos-4 { bottom: 10%; right: 10%; transform: rotate(-8deg); }
-        .pos-5 { top: 40%; left: 5%; transform: rotate(-15deg); }
-        .pos-6 { top: 50%; right: 5%; transform: rotate(12deg); }
-
-
-        /* --- NEON HEART --- */
-        .heart-wrapper {
-            position: relative;
-            width: 300px;
-            height: 300px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: width 0.3s, height 0.3s;
-        }
-
-        .neon-svg {
-            width: 100%;
-            height: 100%;
-            filter: drop-shadow(0 0 10px #ff0000) drop-shadow(0 0 30px #ff0000);
-            animation: pulse 2s infinite ease-in-out;
-        }
-
-        .heart-path {
-            fill: none;
-            stroke: #ff0040;
-            stroke-width: 3;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-
-        .heart-text {
-            position: absolute;
+        .corner-text {
+            /* Using the same font and glow as .heart-text */
             font-family: 'Great Vibes', cursive;
-            font-size: 2.5rem;
+            font-size: 2rem;
             color: #fff;
             text-shadow: 0 0 10px #ff0040, 0 0 20px #ff0040;
-            text-align: center;
-            pointer-events: none;
-            transition: font-size 0.3s;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); filter: drop-shadow(0 0 10px #ff0000); }
-            50% { transform: scale(1.05); filter: drop-shadow(0 0 25px #ff0000); }
-            100% { transform: scale(1); filter: drop-shadow(0 0 10px #ff0000); }
-        }
+        /* --- HERO SECTION --- */
+        .hero {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 10;
+            overflow: hidden; 
+        }
 
-        /* --- LOVE CONTENT SECTION --- */
-        .content-section {
-            position: relative;
-            z-index: 10;
-            padding: 4rem 2rem;
-            text-align: center;
-            /* Darker background for readability against bg image */
-            background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.95));
-            max-width: 800px;
-            margin: 0 auto;
-        }
+        /* Floating Background Images in Hero */
+        .floating-gallery {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; 
+            overflow: hidden;
+        }
 
-        .love-note {
-            font-size: 1.2rem;
-            line-height: 1.8;
-            margin-bottom: 2rem;
-            color: #eee;
-        }
+        .float-img {
+            position: absolute;
+            width: 200px;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 10px;
+            opacity: 0; /* Hidden initially */
+            
+            /* UPDATED: Glowing Edge Effect */
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            /* Layered shadows for a neon glow */
+            box-shadow: 0 0 10px rgba(255, 0, 64, 0.5),
+                        0 0 20px rgba(255, 0, 64, 0.3),
+                        0 0 30px rgba(255, 0, 64, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        /* Optional: Make glow slightly stronger on hover */
+        .float-img:hover {
+             box-shadow: 0 0 15px rgba(255, 0, 64, 0.7),
+                         0 0 30px rgba(255, 0, 64, 0.5),
+                         0 0 45px rgba(255, 0, 64, 0.3);
+             border-color: rgba(255, 255, 255, 0.8);
+        }
 
-        .love-note strong {
-            color: #ff4d6d;
-        }
 
-        .chat-btn {
-            display: inline-block;
-            padding: 15px 40px;
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #fff;
-            background: transparent;
-            border: 2px solid #ff0040;
-            border-radius: 50px;
-            text-decoration: none;
-            box-shadow: 0 0 15px #ff0040;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
+        /* Standard Positions (Desktop) */
+        .pos-1 { top: 10%; left: 10%; transform: rotate(-5deg); }
+        .pos-2 { top: 15%; right: 15%; transform: rotate(10deg); }
+        .pos-3 { bottom: 20%; left: 15%; transform: rotate(5deg); }
+        .pos-4 { bottom: 10%; right: 10%; transform: rotate(-8deg); }
+        .pos-5 { top: 40%; left: 5%; transform: rotate(-15deg); }
+        .pos-6 { top: 50%; right: 5%; transform: rotate(12deg); }
 
-        .chat-btn:hover {
-            background: #ff0040;
-            box-shadow: 0 0 30px #ff0040, 0 0 60px #ff0040;
-            transform: translateY(-3px);
-        }
 
-        /* --- FULL WIDTH GALLERY --- */
-        .gallery-section {
-            position: relative;
-            z-index: 10;
-            padding: 2rem 0;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            background: rgba(0,0,0,0.8); /* Semi-transparent bg */
-        }
+        /* --- NEON HEART --- */
+        .heart-wrapper {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: width 0.3s, height 0.3s;
+        }
 
-        .full-img {
-            width: 100%;
-            height: 60vh;
-            object-fit: cover;
-            filter: grayscale(30%) brightness(0.8);
-            transition: all 0.5s ease;
-        }
+        .neon-svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 10px #ff0000) drop-shadow(0 0 30px #ff0000);
+            animation: pulse 2s infinite ease-in-out;
+        }
 
-        .full-img-container {
-            overflow: hidden;
-            width: 100%;
-        }
+        .heart-path {
+            fill: none;
+            stroke: #ff0040;
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
 
-        /* --- MUSIC BUTTON STYLE --- */
-        .music-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 9999;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: rgba(0, 0, 0, 0.6);
-            border: 2px solid #ff0040;
-            color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            box-shadow: 0 0 10px #ff0040;
-            transition: all 0.3s ease;
-            outline: none;
-            font-size: 20px;
-        }
+        .heart-text {
+            position: absolute;
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.5rem;
+            color: #fff;
+            text-shadow: 0 0 10px #ff0040, 0 0 20px #ff0040;
+            text-align: center;
+            pointer-events: none;
+            transition: font-size 0.3s;
+        }
 
-        .music-btn:hover {
-            transform: scale(1.1);
-            background: #ff0040;
-            box-shadow: 0 0 20px #ff0040, 0 0 40px #ff0040;
-        }
+        @keyframes pulse {
+            0% { transform: scale(1); filter: drop-shadow(0 0 10px #ff0000); }
+            50% { transform: scale(1.05); filter: drop-shadow(0 0 25px #ff0000); }
+            100% { transform: scale(1); filter: drop-shadow(0 0 10px #ff0000); }
+        }
 
-        /* --- MEDIA QUERIES (MOBILE OPTIMIZATION) --- */
-        @media screen and (max-width: 768px) {
-            
-            /* 1. Resize the Heart */
-            .heart-wrapper {
-                width: 200px;
-                height: 200px;
+        /* --- LOVE CONTENT SECTION --- */
+        .content-section {
+            position: relative;
+            z-index: 10;
+            padding: 4rem 2rem;
+            text-align: center;
+            /* Darker background for readability against bg image */
+            background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.95));
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .love-note {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            color: #eee;
+        }
+
+        .love-note strong {
+            color: #ff4d6d;
+        }
+
+        .chat-btn {
+            display: inline-block;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #fff;
+            background: transparent;
+            border: 2px solid #ff0040;
+            border-radius: 50px;
+            text-decoration: none;
+            box-shadow: 0 0 15px #ff0040;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .chat-btn:hover {
+            background: #ff0040;
+            box-shadow: 0 0 30px #ff0040, 0 0 60px #ff0040;
+            transform: translateY(-3px);
+        }
+
+        /* --- FULL WIDTH GALLERY --- */
+        .gallery-section {
+            position: relative;
+            z-index: 10;
+            padding: 2rem 0 4rem 0; /* Added bottom padding */
+            display: flex;
+            flex-direction: column;
+            gap: 40px; /* Increased gap for the glow space */
+            background: rgba(0,0,0,0.8); /* Semi-transparent bg */
+        }
+
+        .full-img {
+            width: 100%;
+            height: 60vh;
+            object-fit: cover;
+            filter: grayscale(30%) brightness(0.8);
+            transition: all 0.5s ease;
+        }
+
+        /* NEW: Special styling for the GIFs with glow */
+        .full-img.gif-glow {
+            /* Remove the grayscale filter so the GIF is vibrant */
+            filter: none !important;
+            border-radius: 15px;
+            /* Applying the same glow effect as .float-img */
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 15px rgba(255, 0, 64, 0.6),
+                        0 0 30px rgba(255, 0, 64, 0.4),
+                        0 0 45px rgba(255, 0, 64, 0.2);
+        }
+        
+        /* Hover effect for the glowing GIFs */
+        .full-img.gif-glow:hover {
+             box-shadow: 0 0 25px rgba(255, 0, 64, 0.8),
+                         0 0 50px rgba(255, 0, 64, 0.6),
+                         0 0 70px rgba(255, 0, 64, 0.4);
+         }
+
+
+        .full-img-container {
+            /* UPDATED: Changed from hidden to visible so the box-shadow isn't cut off */
+            overflow: visible;
+            width: 90%; /* Reduced width slightly to show glow on sides */
+            margin: 0 auto; /* Center the container */
+            padding: 10px; /* Padding for the glow */
+        }
+
+        /* --- MUSIC BUTTON STYLE --- */
+        .music-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid #ff0040;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 0 10px #ff0040;
+            transition: all 0.3s ease;
+            outline: none;
+            font-size: 20px;
+        }
+
+        .music-btn:hover {
+            transform: scale(1.1);
+            background: #ff0040;
+            box-shadow: 0 0 20px #ff0040, 0 0 40px #ff0040;
+        }
+
+        /* --- MEDIA QUERIES (MOBILE OPTIMIZATION) --- */
+        @media screen and (max-width: 768px) {
+            /* NEW: Adjust corner text size on mobile */
+            .top-corners-container {
+                padding: 0 20px;
             }
-            .heart-text {
+            .corner-text {
                 font-size: 1.3rem;
             }
 
-            /* 2. Resize Floating Images & Adjust Position */
-            .float-img {
-                width: 100px;
-                height: 120px;
-                opacity: 0.6 !important;
-                /* Slightly reduce glow on mobile */
-                box-shadow: 0 0 10px rgba(255, 0, 64, 0.5);
-            }
+            /* 1. Resize the Heart */
+            .heart-wrapper {
+                width: 200px;
+                height: 200px;
+            }
+            .heart-text {
+                font-size: 1.3rem;
+            }
 
-            /* Push images further to edges on mobile */
-            .pos-1 { top: 5%; left: -10px; }
-            .pos-2 { top: 5%; right: -10px; }
-            .pos-3 { bottom: 15%; left: -10px; }
-            .pos-4 { bottom: 15%; right: -10px; }
-            .pos-5 { top: 40%; left: -20px; }
-            .pos-6 { top: 40%; right: -20px; }
+            /* 2. Resize Floating Images & Adjust Position */
+            .float-img {
+                width: 100px;
+                height: 120px;
+                opacity: 0.6 !important;
+                /* Slightly reduce glow on mobile */
+                box-shadow: 0 0 10px rgba(255, 0, 64, 0.5);
+            }
 
-            /* 3. Text & Layout Adjustments */
-            .content-section {
-                padding: 3rem 1.5rem;
-            }
-            .love-note {
-                font-size: 1rem;
-                line-height: 1.6;
-            }
-            .chat-btn {
-                padding: 12px 30px;
-                font-size: 1rem;
-            }
+            /* Push images further to edges on mobile */
+            .pos-1 { top: 5%; left: -10px; }
+            .pos-2 { top: 5%; right: -10px; }
+            .pos-3 { bottom: 15%; left: -10px; }
+            .pos-4 { bottom: 15%; right: -10px; }
+            .pos-5 { top: 40%; left: -20px; }
+            .pos-6 { top: 40%; right: -20px; }
 
-            /* 4. Gallery Adjustments */
-            .full-img {
-                height: 40vh;
+            /* 3. Text & Layout Adjustments */
+            .content-section {
+                padding: 3rem 1.5rem;
+            }
+            .love-note {
+                font-size: 1rem;
+                line-height: 1.6;
+            }
+            .chat-btn {
+                padding: 12px 30px;
+                font-size: 1rem;
+            }
+
+            /* 4. Gallery Adjustments */
+            .full-img {
+                height: 40vh;
+            }
+            .full-img-container {
+                width: 95%;
             }
-            
-            /* 5. Adjust Music Button for Mobile */
-            .music-btn {
-                bottom: 15px;
-                right: 15px;
-                width: 45px;
-                height: 45px;
-            }
-        }
-    </style>
+            
+            /* 5. Adjust Music Button for Mobile */
+            .music-btn {
+                bottom: 15px;
+                right: 15px;
+                width: 45px;
+                height: 45px;
+            }
+        }
+    </style>
 </head>
 <body>
 
-    <div id="sakura-container"></div>
+    <div id="sakura-container"></div>
 
-    <section class="hero">
-        <div class="floating-gallery">
-            <img src="img1.jpg" class="float-img pos-1" alt="Memory 1">
-            <img src="img2.jpg" class="float-img pos-2" alt="Memory 2">
-            <img src="img3.jpg" class="float-img pos-3" alt="Memory 3">
-            <img src="img4.jpg" class="float-img pos-4" alt="Memory 4">
-            <img src="img5.jpg" class="float-img pos-5" alt="Memory 5">
-            <img src="img6.jpg" class="float-img pos-6" alt="Memory 6">
-        </div>
+    <div class="top-corners-container">
+        <div class="corner-text">~Phantom 0X</div>
+        <div class="corner-text">~Princess 0X</div>
+    </div>
 
-        <div class="heart-wrapper">
-            <svg class="neon-svg" viewBox="0 0 100 100">
-                <path class="heart-path" d="M50 88.9C25.5 74.2 8.5 56.6 8.5 37.7 8.5 24.1 18.2 14 31.5 14c7.4 0 14.5 3.5 18.5 9 4-5.5 11.1-9 18.5-9 13.3 0 23 10.1 23 23.7 0 18.9-17 36.5-41.5 51.2z" />
-            </svg>
-            <div class="heart-text">Hey Arya<br>Happy<br>Valentine's Day</div>
-        </div>
-    </section>
+    <section class="hero">
+        <div class="floating-gallery">
+            <img src="img1.jpg" class="float-img pos-1" alt="Memory 1">
+            <img src="img2.jpg" class="float-img pos-2" alt="Memory 2">
+            <img src="img3.jpg" class="float-img pos-3" alt="Memory 3">
+            <img src="img4.jpg" class="float-img pos-4" alt="Memory 4">
+            <img src="img5.jpg" class="float-img pos-5" alt="Memory 5">
+            <img src="img6.jpg" class="float-img pos-6" alt="Memory 6">
+        </div>
 
-    <section class="content-section">
-        <div class="love-note">
-            <p>
-                My dearest <strong>Arya</strong>, I wanted to create a little space in this digital world just for you. 
-                Every day with you feels like a dream I never want to wake up from. 
-                I promise to always <strong>care for you</strong>, to listen to you, and to <strong>pamper you</strong> 
-                like the royalty you are. You bring so much light into my life, and I just want to see you smile.
-                I love you more than words or code could ever express.
-            </p>
-        </div>
-        <a href="https://y99.in/r/2540236" class="chat-btn">Join Chat</a>
-    </section>
+        <div class="heart-wrapper">
+            <svg class="neon-svg" viewBox="0 0 100 100">
+                <path class="heart-path" d="M50 88.9C25.5 74.2 8.5 56.6 8.5 37.7 8.5 24.1 18.2 14 31.5 14c7.4 0 14.5 3.5 18.5 9 4-5.5 11.1-9 18.5-9 13.3 0 23 10.1 23 23.7 0 18.9-17 36.5-41.5 51.2z" />
+            </svg>
+            <div class="heart-text">Hey Arya<br>Happy<br>Valentine's Day</div>
+        </div>
+    </section>
 
-    <section class="gallery-section">
-        <div class="full-img-container">
-            <img src="img7.gif" class="full-img" alt="Gallery 1">
-        </div>
-        <div class="full-img-container">
-            <img src="img8.gif" class="full-img" alt="Gallery 2">
-        </div>
-        <div class="full-img-container">
-            <img src="img9.gif" class="full-img" alt="Gallery 3">
-        </div>
-    </section>
+    <section class="content-section">
+        <div class="love-note">
+            <p>
+                My dearest <strong>Arya</strong>, I wanted to create a little space in this digital world just for you. 
+                Every day with you feels like a dream I never want to wake up from. 
+                I promise to always <strong>care for you</strong>, to listen to you, and to <strong>pamper you</strong> 
+                like the royalty you are. You bring so much light into my life, and I just want to see you smile.
+                I love you more than words or code could ever express.
+            </p>
+        </div>
+        <a href="https://y99.in/r/2540236" class="chat-btn">Join Chat</a>
+    </section>
 
-    <audio id="bg-music" loop>
-        <source src="ishq.mp3" type="audio/mpeg">
-    </audio>
-    <button id="toggle-music" class="music-btn" title="Play Music">
-        🎵
-    </button>
+    <section class="gallery-section">
+                <div class="full-img-container">
+            <img src="img7.gif" class="full-img gif-glow" alt="Gallery 1">
+        </div>
+        <div class="full-img-container">
+            <img src="img8.gif" class="full-img gif-glow" alt="Gallery 2">
+        </div>
+        <div class="full-img-container">
+            <img src="img9.gif" class="full-img gif-glow" alt="Gallery 3">
+        </div>
+    </section>
 
-    <script>
-        gsap.registerPlugin(ScrollTrigger);
+    <audio id="bg-music" loop>
+        <source src="ishq.mp3" type="audio/mpeg">
+    </audio>
+    <button id="toggle-music" class="music-btn" title="Play Music">
+        🎵
+    </button>
 
-        // --- 1. SAKURA ANIMATION GENERATOR ---
-        const sakuraContainer = document.getElementById('sakura-container');
-        const petalCount = 30;
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
 
-        function createPetal() {
-            const petal = document.createElement('div');
-            petal.classList.add('petal');
-            
-            const startLeft = Math.random() * window.innerWidth;
-            const size = Math.random() * 10 + 10;
-            const duration = Math.random() * 5 + 5;
-            
-            petal.style.left = startLeft + 'px';
-            petal.style.width = size + 'px';
-            petal.style.height = size + 'px';
-            petal.style.opacity = Math.random() * 0.5 + 0.3;
+        // --- 1. SAKURA ANIMATION GENERATOR ---
+        const sakuraContainer = document.getElementById('sakura-container');
+        const petalCount = 30;
 
-            sakuraContainer.appendChild(petal);
+        function createPetal() {
+            const petal = document.createElement('div');
+            petal.classList.add('petal');
+            
+            const startLeft = Math.random() * window.innerWidth;
+            const size = Math.random() * 10 + 10;
+            const duration = Math.random() * 5 + 5;
+            
+            petal.style.left = startLeft + 'px';
+            petal.style.width = size + 'px';
+            petal.style.height = size + 'px';
+            petal.style.opacity = Math.random() * 0.5 + 0.3;
 
-            gsap.fromTo(petal, 
-                { y: -50, rotation: 0, x: 0 },
-                {
-                    y: window.innerHeight + 100,
-                    rotation: 360,
-                    x: "random(-100, 100)",
-                    duration: duration,
-                    ease: "none",
-                    repeat: -1,
-                    delay: Math.random() * 5
-                }
-            );
-        }
+            sakuraContainer.appendChild(petal);
 
-        for (let i = 0; i < petalCount; i++) {
-            createPetal();
-        }
+            gsap.fromTo(petal, 
+                { y: -50, rotation: 0, x: 0 },
+                {
+                    y: window.innerHeight + 100,
+                    rotation: 360,
+                    x: "random(-100, 100)",
+                    duration: duration,
+                    ease: "none",
+                    repeat: -1,
+                    delay: Math.random() * 5
+                }
+            );
+        }
 
-        // --- 2. HERO SECTION ANIMATIONS ---
-        gsap.from(".heart-wrapper", {
-            duration: 1.5,
-            scale: 0,
-            opacity: 0,
-            ease: "back.out(1.7)"
-        });
+        for (let i = 0; i < petalCount; i++) {
+            createPetal();
+        }
 
-        const floatImages = document.querySelectorAll('.float-img');
-        
-        // Initial fade in
-        gsap.to(floatImages, {
-            opacity: 0.7, // GSAP will animate to this, CSS media query might override for mobile
-            duration: 2,
-            stagger: 0.5,
-            ease: "power2.out"
-        });
+        // --- 2. HERO SECTION ANIMATIONS ---
+        gsap.from(".heart-wrapper", {
+            duration: 1.5,
+            scale: 0,
+            opacity: 0,
+            ease: "back.out(1.7)"
+        });
 
-        // Continuous Floating
-        floatImages.forEach((img) => {
-            gsap.to(img, {
-                y: "random(-20, 20)",
-                x: "random(-10, 10)",
-                rotation: "random(-5, 5)",
-                duration: "random(2, 4)",
-                yoyo: true,
-                repeat: -1,
-                ease: "sine.inOut"
-            });
-        });
+        const floatImages = document.querySelectorAll('.float-img');
+        
+        // Initial fade in
+        gsap.to(floatImages, {
+            opacity: 0.7, // GSAP will animate to this, CSS media query might override for mobile
+            duration: 2,
+            stagger: 0.5,
+            ease: "power2.out"
+        });
 
-        // --- 3. SCROLL TRIGGER ANIMATIONS ---
-        gsap.from(".content-section", {
-            scrollTrigger: {
-                trigger: ".content-section",
-                start: "top 80%",
-                toggleActions: "play none none reverse"
-            },
-            y: 50,
-            opacity: 0,
-            duration: 1
-        });
+        // Continuous Floating
+        floatImages.forEach((img) => {
+            gsap.to(img, {
+                y: "random(-20, 20)",
+                x: "random(-10, 10)",
+                rotation: "random(-5, 5)",
+                duration: "random(2, 4)",
+                yoyo: true,
+                repeat: -1,
+                ease: "sine.inOut"
+            });
+        });
 
-        const fullImages = document.querySelectorAll('.full-img');
-        
-        fullImages.forEach((img) => {
-            gsap.from(img, {
-                scrollTrigger: {
-                    trigger: img,
-                    start: "top 85%",
-                    toggleActions: "play none none reverse"
-                },
-                scale: 1.1,
-                opacity: 0,
-                duration: 1,
-                ease: "power2.out"
-            });
-        });
+        // --- 3. SCROLL TRIGGER ANIMATIONS ---
+        gsap.from(".content-section", {
+            scrollTrigger: {
+                trigger: ".content-section",
+                start: "top 80%",
+                toggleActions: "play none none reverse"
+            },
+            y: 50,
+            opacity: 0,
+            duration: 1
+        });
 
-        // --- 4. MUSIC CONTROLS ---
-        const music = document.getElementById('bg-music');
-        const musicBtn = document.getElementById('toggle-music');
-        let isPlaying = false;
+        const fullImages = document.querySelectorAll('.full-img');
+        
+        fullImages.forEach((img) => {
+            gsap.from(img, {
+                scrollTrigger: {
+                    trigger: img,
+                    start: "top 85%",
+                    toggleActions: "play none none reverse"
+                },
+                scale: 1.1,
+                opacity: 0,
+                duration: 1,
+                ease: "power2.out"
+            });
+        });
 
-        musicBtn.addEventListener('click', () => {
-            if (isPlaying) {
-                music.pause();
-                musicBtn.innerHTML = '🎵'; // Icon for "Play" (Music note)
-                musicBtn.title = "Play Music";
-            } else {
-                music.play().catch(error => console.log("Audio playback failed: ", error));
-                musicBtn.innerHTML = '❚❚'; // Icon for "Pause"
-                musicBtn.title = "Pause Music";
-            }
-            isPlaying = !isPlaying;
-        });
-    </script>
+        // --- 4. MUSIC CONTROLS ---
+        const music = document.getElementById('bg-music');
+        const musicBtn = document.getElementById('toggle-music');
+        let isPlaying = false;
+
+        musicBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                music.pause();
+                musicBtn.innerHTML = '🎵'; // Icon for "Play" (Music note)
+                musicBtn.title = "Play Music";
+            } else {
+                music.play().catch(error => console.log("Audio playback failed: ", error));
+                musicBtn.innerHTML = '❚❚'; // Icon for "Pause"
+                musicBtn.title = "Pause Music";
+            }
+            isPlaying = !isPlaying;
+        });
+    </script>
 </body>
-
 
 </html>
