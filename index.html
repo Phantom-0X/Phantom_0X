@@ -20,11 +20,10 @@
 
         body {
             /* UPDATED: Background Image with Dark Overlay */
-            /* This layers a dark gradient over your image to ensure text is readable */
             background: linear-gradient(rgba(46, 0, 0, 0.6), rgba(0, 0, 0, 0.9)), url('img-bg.jpg');
             background-size: cover;
             background-position: center;
-            background-attachment: fixed; /* Keeps image still while scrolling */
+            background-attachment: fixed;
             background-repeat: no-repeat;
             
             color: white;
@@ -225,6 +224,34 @@
             width: 100%;
         }
 
+        /* --- MUSIC BUTTON STYLE --- */
+        .music-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid #ff0040;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 0 10px #ff0040;
+            transition: all 0.3s ease;
+            outline: none;
+            font-size: 20px;
+        }
+
+        .music-btn:hover {
+            transform: scale(1.1);
+            background: #ff0040;
+            box-shadow: 0 0 20px #ff0040, 0 0 40px #ff0040;
+        }
+
         /* --- MEDIA QUERIES (MOBILE OPTIMIZATION) --- */
         @media screen and (max-width: 768px) {
             
@@ -270,6 +297,14 @@
             /* 4. Gallery Adjustments */
             .full-img {
                 height: 40vh;
+            }
+            
+            /* 5. Adjust Music Button for Mobile */
+            .music-btn {
+                bottom: 15px;
+                right: 15px;
+                width: 45px;
+                height: 45px;
             }
         }
     </style>
@@ -320,6 +355,13 @@
             <img src="img9.jpg" class="full-img" alt="Gallery 3">
         </div>
     </section>
+
+    <audio id="bg-music" loop>
+        <source src="ishq.mp3" type="audio/mpeg">
+    </audio>
+    <button id="toggle-music" class="music-btn" title="Play Music">
+        🎵
+    </button>
 
     <script>
         gsap.registerPlugin(ScrollTrigger);
@@ -419,10 +461,25 @@
                 ease: "power2.out"
             });
         });
+
+        // --- 4. MUSIC CONTROLS ---
+        const music = document.getElementById('bg-music');
+        const musicBtn = document.getElementById('toggle-music');
+        let isPlaying = false;
+
+        musicBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                music.pause();
+                musicBtn.innerHTML = '🎵'; // Icon for "Play" (Music note)
+                musicBtn.title = "Play Music";
+            } else {
+                music.play().catch(error => console.log("Audio playback failed: ", error));
+                musicBtn.innerHTML = '❚❚'; // Icon for "Pause"
+                musicBtn.title = "Pause Music";
+            }
+            isPlaying = !isPlaying;
+        });
     </script>
 </body>
 
 </html>
-
-
-
